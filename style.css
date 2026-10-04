@@ -1,30 +1,46 @@
 /* ==========================================================
-   Rainy Muse Poll v0.1 Style System
-   Theme:
-     - Background: Pale Ivory (#FAF7F2)
-     - Main / Text: Deep Navy (#0E1B33, #152544)
-     - Accent: Soft Muted Gold (#C59E53, #DFBE7A, #EFE2BE)
-     - Selected: Gentle Starlight Glow
+   Rainy Muse Poll v0.1.2 Style System
+   Theme: "濃紺・白・少しの金" (Midnight Navy, Bright Ivory Surface, Soft Gold)
+     - Night Sky Backdrop: Deep Navy & Midnight Blue
+     - Heading & Brand: White to Pale Starlight Gold
+     - Operational Cards: Bright Off-white / Luminous Ivory (High Readability)
+     - Card Text: Deep Midnight Navy (High Contrast)
+     - Selected State: Soft Gold Border & Subtle Starlight Glow
+     - CTA Buttons: High-contrast Gold/Navy Pairings
+     - Progress Bar: Pale Navy Track + Navy/Gold Accent Fill
    ========================================================== */
 
 :root {
-  --bg-ivory: #FAF7F2;
-  --bg-card: #FFFFFF;
-  --bg-card-subtle: #F5F1E8;
-  --main-navy: #0E1B33;
-  --navy-light: #1E3156;
-  --navy-mist: #546582;
-  --navy-border: rgba(14, 27, 51, 0.12);
-  --gold-accent: #C59E53;
-  --gold-light: #DFBE7A;
-  --gold-pale: #F6EED8;
-  --gold-glow: rgba(197, 158, 83, 0.22);
-  --star-highlight: rgba(223, 190, 122, 0.14);
+  /* Night Sky & Cosmic Canvas */
+  --night-deep: #050d21;
+  --night-navy: #091938;
+  --night-surface: #0e244d;
+  
+  /* Luminous Operation Surface (bright, high readability) */
+  --bg-card: #FAF8F5;
+  --bg-card-subtle: #F3EFE8;
+  --card-border: rgba(220, 235, 255, 0.24);
+  
+  /* Deep Navy Text for Cards (Crisp & High Contrast, >12:1) */
+  --text-primary: #0A172E;
+  --text-muted: #485977;
+  --border-subtle: rgba(10, 23, 46, 0.12);
+  
+  /* Outer Night Text (Header & Footer) */
+  --night-text: #F5F7FC;
+  --night-muted: #A3B5D2;
+  
+  /* Gold Accents (Sleeping Stars signature) */
+  --gold-accent: #CFA652;
+  --gold-light: #ECD38C;
+  --gold-glow: rgba(207, 166, 82, 0.32);
+  --star-highlight: rgba(236, 211, 140, 0.16);
+
+  /* Geometry & Shadows */
   --card-radius: 24px;
   --inner-radius: 16px;
-  --shadow-subtle: 0 8px 30px rgba(14, 27, 51, 0.06);
-  --shadow-hover: 0 12px 36px rgba(14, 27, 51, 0.1);
-  --shadow-glow: 0 0 18px var(--gold-glow);
+  --shadow-card: 0 20px 60px rgba(2, 6, 16, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-glow: 0 0 16px var(--gold-glow);
 }
 
 *, *::before, *::after {
@@ -42,8 +58,10 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: var(--bg-ivory);
-  color: var(--main-navy);
+  background-color: var(--night-deep);
+  background: radial-gradient(circle at 50% -10%, #153463 0%, transparent 55%),
+              linear-gradient(180deg, #07152f 0%, #030816 100%);
+  color: var(--night-text);
   font-family: "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   line-height: 1.7;
   letter-spacing: 0.02em;
@@ -65,23 +83,23 @@ body {
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(circle at 15% 20%, rgba(197, 158, 83, 0.18) 0, transparent 2px),
-    radial-gradient(circle at 75% 15%, rgba(14, 27, 51, 0.12) 0, transparent 2px),
-    radial-gradient(circle at 85% 70%, rgba(197, 158, 83, 0.15) 0, transparent 2px),
-    radial-gradient(circle at 25% 80%, rgba(14, 27, 51, 0.1) 0, transparent 2px);
-  background-size: 180px 180px, 220px 220px, 260px 260px, 200px 200px;
-  opacity: 0.7;
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.75) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 78% 18%, rgba(207, 166, 82, 0.8) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 86% 72%, rgba(165, 205, 255, 0.7) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 22% 82%, rgba(255, 255, 255, 0.6) 0 1px, transparent 1.5px);
+  background-size: 190px 190px, 240px 240px, 280px 280px, 220px 220px;
+  opacity: 0.45;
 }
 
 .soft-glow {
   position: absolute;
-  top: -10%;
+  top: -12%;
   left: 50%;
   transform: translateX(-50%);
-  width: 90vw;
-  max-width: 900px;
-  height: 400px;
-  background: radial-gradient(ellipse at center, rgba(246, 238, 216, 0.7) 0%, rgba(250, 247, 242, 0) 70%);
+  width: 95vw;
+  max-width: 960px;
+  height: 440px;
+  background: radial-gradient(ellipse at center, rgba(62, 115, 194, 0.18) 0%, rgba(3, 8, 22, 0) 70%);
   filter: blur(50px);
 }
 
@@ -109,21 +127,24 @@ body {
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gold-accent);
-  padding: 0.35rem 1.1rem;
-  background: #FFFDF9;
-  border: 1px solid rgba(197, 158, 83, 0.3);
+  color: var(--gold-light);
+  padding: 0.35rem 1.15rem;
+  background: rgba(14, 33, 70, 0.65);
+  border: 1px solid rgba(207, 166, 82, 0.4);
   border-radius: 999px;
   margin-bottom: 0.9rem;
+  box-shadow: 0 0 16px rgba(207, 166, 82, 0.12);
+  backdrop-filter: blur(8px);
 }
 
 .page-title {
   font-family: "Noto Serif JP", serif;
   font-weight: 500;
-  font-size: clamp(1.4rem, 4vw, 1.85rem);
-  color: var(--main-navy);
+  font-size: clamp(1.45rem, 4.2vw, 1.95rem);
+  color: var(--night-text);
   line-height: 1.45;
   letter-spacing: 0.04em;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
 }
 
 .title-main,
@@ -137,12 +158,12 @@ body {
   opacity: 0.65;
 }
 
-/* Main Card */
+/* Main Operational Card */
 .poll-card {
   background: var(--bg-card);
-  border: 1px solid var(--navy-border);
+  border: 1px solid var(--card-border);
   border-radius: var(--card-radius);
-  box-shadow: var(--shadow-subtle);
+  box-shadow: var(--shadow-card);
   padding: clamp(1.75rem, 5vw, 2.75rem);
   position: relative;
   transition: box-shadow 0.3s ease;
@@ -157,15 +178,15 @@ body {
 .question-title {
   font-family: "Noto Serif JP", serif;
   font-weight: 600;
-  font-size: clamp(1.15rem, 3.2vw, 1.35rem);
-  color: var(--main-navy);
+  font-size: clamp(1.18rem, 3.2vw, 1.38rem);
+  color: var(--text-primary);
   margin-bottom: 0.65rem;
   letter-spacing: 0.03em;
 }
 
 .question-subtitle {
   font-size: 0.95rem;
-  color: var(--navy-mist);
+  color: var(--text-muted);
   line-height: 1.8;
 }
 
@@ -202,18 +223,18 @@ body {
   align-items: center;
   justify-content: flex-start;
   padding: 0.95rem 1.1rem;
-  border: 1px solid var(--navy-border);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--inner-radius);
-  background: #FCFAF6;
+  background: #FFFFFF;
   cursor: pointer;
   user-select: none;
   transition: all 0.2s ease-in-out;
 }
 
 .choice-option:hover {
-  background: #FFFDF9;
-  border-color: rgba(197, 158, 83, 0.45);
-  box-shadow: 0 4px 14px rgba(14, 27, 51, 0.04);
+  background: #FFFFFF;
+  border-color: rgba(207, 166, 82, 0.55);
+  box-shadow: 0 4px 16px rgba(10, 23, 46, 0.05);
 }
 
 .choice-option input[type="radio"] {
@@ -229,7 +250,7 @@ body {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 1.5px solid rgba(14, 27, 51, 0.3);
+  border: 1.5px solid rgba(10, 23, 46, 0.28);
   margin-right: 0.75rem;
   position: relative;
   transition: all 0.2s ease;
@@ -240,22 +261,22 @@ body {
   font-family: "Noto Serif JP", serif;
   font-weight: 500;
   font-size: 1.02rem;
-  color: var(--main-navy);
+  color: var(--text-primary);
   letter-spacing: 0.02em;
 }
 
-/* Selected state: soft starry highlight */
+/* Selected state: soft gold border & starlight glow */
 .choice-option:has(input[type="radio"]:checked),
 .choice-option.is-selected {
-  background: #FFFDF8;
+  background: #FFFDF7;
   border-color: var(--gold-accent);
-  box-shadow: var(--shadow-glow), inset 0 0 12px var(--star-highlight);
+  box-shadow: 0 0 16px rgba(207, 166, 82, 0.28), inset 0 0 12px var(--star-highlight);
 }
 
 .choice-option input[type="radio"]:checked + .choice-custom-radio,
 .choice-option.is-selected .choice-custom-radio {
   border-color: var(--gold-accent);
-  background: #FFFDF8;
+  background: #FFFDF7;
 }
 
 .choice-option input[type="radio"]:checked + .choice-custom-radio::after,
@@ -288,9 +309,9 @@ body {
 
 .submit-btn {
   appearance: none;
-  border: none;
-  background: linear-gradient(135deg, var(--main-navy) 0%, var(--navy-light) 100%);
-  color: #F8F5EE;
+  border: 1px solid rgba(207, 166, 82, 0.45);
+  background: linear-gradient(135deg, #091730 0%, #152c54 100%);
+  color: #FFFFFF;
   font-family: "Noto Serif JP", serif;
   font-size: 1.05rem;
   font-weight: 500;
@@ -298,7 +319,7 @@ body {
   padding: 1rem 2.75rem;
   border-radius: 999px;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(14, 27, 51, 0.16);
+  box-shadow: 0 8px 24px rgba(7, 18, 40, 0.3), 0 0 12px rgba(207, 166, 82, 0.15);
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -310,13 +331,15 @@ body {
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(14, 27, 51, 0.24);
-  background: linear-gradient(135deg, #091325 0%, #152748 100%);
+  box-shadow: 0 12px 30px rgba(7, 18, 40, 0.4), 0 0 18px rgba(207, 166, 82, 0.25);
+  background: linear-gradient(135deg, #0e2246 0%, #1d3b6e 100%);
+  border-color: rgba(207, 166, 82, 0.65);
 }
 
 .submit-btn:disabled {
-  background: rgba(14, 27, 51, 0.18);
-  color: rgba(14, 27, 51, 0.4);
+  background: rgba(10, 23, 46, 0.08);
+  color: rgba(10, 23, 46, 0.32);
+  border-color: rgba(10, 23, 46, 0.08);
   cursor: not-allowed;
   box-shadow: none;
   transform: none;
@@ -343,7 +366,7 @@ body {
 
 .status-msg {
   font-size: 0.88rem;
-  color: var(--navy-mist);
+  color: var(--text-muted);
   min-height: 1.3rem;
 }
 
@@ -383,13 +406,13 @@ body {
   font-family: "Noto Serif JP", serif;
   font-weight: 600;
   font-size: clamp(1.2rem, 3.4vw, 1.45rem);
-  color: var(--main-navy);
+  color: var(--text-primary);
   margin-bottom: 0.4rem;
 }
 
 .results-sub {
   font-size: 0.95rem;
-  color: var(--navy-mist);
+  color: var(--text-muted);
 }
 
 /* Horizontal Bar Chart */
@@ -411,46 +434,46 @@ body {
 }
 
 .chart-row.is-voted-type {
-  background: rgba(197, 158, 83, 0.08);
-  border: 1px dashed rgba(197, 158, 83, 0.4);
+  background: rgba(207, 166, 82, 0.1);
+  border: 1px dashed rgba(207, 166, 82, 0.45);
 }
 
 .chart-type-name {
   font-family: "Noto Serif JP", serif;
   font-size: 0.95rem;
   font-weight: 500;
-  color: var(--main-navy);
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
 .chart-bar-track {
   width: 100%;
   height: 14px;
-  background: var(--bg-card-subtle);
+  background: #EBF0F7;
   border-radius: 999px;
   overflow: hidden;
   position: relative;
-  border: 1px solid rgba(14, 27, 51, 0.06);
+  border: 1px solid rgba(10, 23, 46, 0.08);
 }
 
 .chart-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #1A2E50 0%, var(--gold-accent) 100%);
+  background: linear-gradient(90deg, #102347 0%, #1c3b70 65%, var(--gold-accent) 100%);
   width: 0%;
   transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .chart-row.is-voted-type .chart-bar-fill {
-  background: linear-gradient(90deg, var(--gold-accent) 0%, var(--gold-light) 100%);
-  box-shadow: 0 0 8px rgba(197, 158, 83, 0.4);
+  background: linear-gradient(90deg, #163260 0%, var(--gold-accent) 70%, var(--gold-light) 100%);
+  box-shadow: 0 0 10px rgba(207, 166, 82, 0.45);
 }
 
 .chart-percent {
   font-family: "Cormorant Garamond", serif;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 600;
-  color: var(--main-navy);
+  color: var(--text-primary);
   text-align: right;
   white-space: nowrap;
 }
@@ -458,14 +481,14 @@ body {
 .total-votes-wrap {
   text-align: center;
   padding-top: 1.25rem;
-  border-top: 1px solid var(--navy-border);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .total-votes {
   font-family: "Noto Serif JP", serif;
   font-size: 1.05rem;
-  font-weight: 500;
-  color: var(--main-navy);
+  font-weight: 600;
+  color: var(--text-primary);
   letter-spacing: 0.04em;
 }
 
@@ -478,8 +501,8 @@ body {
 }
 
 .bottom-cta-card {
-  background: #FFFDF9;
-  border: 1px solid rgba(197, 158, 83, 0.35);
+  background: var(--bg-card);
+  border: 1px solid var(--card-border);
   border-radius: var(--card-radius);
   padding: 1.85rem 1.5rem;
   margin-bottom: 1.75rem;
@@ -487,13 +510,13 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.85rem;
-  box-shadow: 0 4px 20px rgba(197, 158, 83, 0.08);
+  box-shadow: var(--shadow-card);
 }
 
 .cta-lead {
   font-family: "Noto Serif JP", serif;
   font-size: 1rem;
-  color: var(--navy-mist);
+  color: var(--text-muted);
 }
 
 .cta-link-btn {
@@ -501,37 +524,38 @@ body {
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  background: transparent;
-  color: var(--main-navy);
+  background: linear-gradient(135deg, #FFF6DC 0%, #DFBE7A 100%);
+  color: #0A172E;
   font-family: "Noto Serif JP", serif;
   font-size: 1.05rem;
   font-weight: 600;
   padding: 0.85rem 2.2rem;
-  border: 1.5px solid var(--gold-accent);
+  border: 1px solid rgba(207, 166, 82, 0.4);
   border-radius: 999px;
   letter-spacing: 0.04em;
+  box-shadow: 0 6px 20px rgba(223, 190, 122, 0.25);
   transition: all 0.2s ease;
 }
 
 .cta-link-btn:hover {
-  background: var(--gold-accent);
-  color: #FFFFFF;
-  box-shadow: 0 6px 18px rgba(197, 158, 83, 0.28);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #FFF9E6 0%, #E7CA86 100%);
+  box-shadow: 0 10px 26px rgba(223, 190, 122, 0.38);
+  transform: translateY(-2px);
 }
 
 .cta-meta {
   font-size: 0.85rem;
-  color: var(--navy-mist);
+  color: var(--text-muted);
   letter-spacing: 0.03em;
 }
 
 .copyright {
   font-size: 0.78rem;
-  color: rgba(14, 27, 51, 0.4);
+  color: var(--night-muted);
   font-family: "Cormorant Garamond", serif;
   letter-spacing: 0.15em;
   text-transform: uppercase;
+  opacity: 0.75;
 }
 
 /* ==========================================================
@@ -567,6 +591,7 @@ body {
     white-space: nowrap;
     max-width: 100%;
   }
+
   body {
     padding: 1.75rem 1rem 3rem;
   }
@@ -615,4 +640,3 @@ body {
     grid-template-columns: 1fr;
   }
 }
-
