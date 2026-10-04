@@ -126,6 +126,17 @@ body {
   letter-spacing: 0.04em;
 }
 
+.title-main,
+.title-sub {
+  display: inline;
+}
+
+.title-sep {
+  display: inline;
+  margin: 0 0.15em;
+  opacity: 0.65;
+}
+
 /* Main Card */
 .poll-card {
   background: var(--bg-card);
@@ -528,6 +539,34 @@ body {
    ========================================================== */
 
 @media (max-width: 640px) {
+  .title-main {
+    display: block;
+    font-size: clamp(1.22rem, 5.2vw, 1.45rem);
+    line-height: 1.35;
+  }
+
+  .title-sep {
+    display: none;
+  }
+
+  .title-sub {
+    display: block;
+    font-size: clamp(1.05rem, 4.4vw, 1.25rem);
+    margin-top: 0.35rem;
+    line-height: 1.4;
+  }
+
+  .bottom-cta-card {
+    padding: 1.6rem 0.85rem;
+  }
+
+  .cta-link-btn {
+    font-size: 0.95rem;
+    padding: 0.75rem 1.15rem;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    max-width: 100%;
+  }
   body {
     padding: 1.75rem 1rem 3rem;
   }
@@ -576,3 +615,4 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
