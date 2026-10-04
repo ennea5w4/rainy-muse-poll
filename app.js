@@ -1,5 +1,5 @@
 /**
- * Rainy Muse Poll v0.1 - Application Logic
+ * Rainy Muse Poll v0.1.1 - Application Logic
  * Minimal anonymous single-vote poll for Sleeping Stars v2
  */
 
@@ -7,13 +7,15 @@
   'use strict';
 
   // --- Configuration ---
+  // Supabase Project credentials and Poll ID
   const POLL_ID = 'sleeping-stars-v2-result';
   const SUPABASE_URL = 'https://telvacnnxhgathhugjlh.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_puNMQNsWazm-HNUFuC5kVw_YDfaCKpo';
   const SUPABASE_TABLE = 'poll_votes';
 
-  // Fallback Local Storage Key
-  const LOCAL_STORAGE_KEY = `rm_poll_${POLL_ID}`;
+  // Local Storage Keys
+  const LOCAL_STORAGE_KEY = m_poll_;
+  const VOTED_KEY = m_poll_voted_;
 
   // Types definition (Type 1 to Type 9)
   const TYPES = [
@@ -45,7 +47,7 @@
   /**
    * Initialize URL parameters, listeners, and existing state
    */
-  function init() {
+  async function init() {
     // 1. Extract source from URL query parameter (e.g. ?source=note)
     const urlParams = new URLSearchParams(window.location.search);
     const rawSource = urlParams.get('source');
@@ -55,12 +57,26 @@
       sourceParam = 'direct';
     }
 
-    // 2. Attach radio change listeners
+    // 2. Check if user already voted in this browser
+    const previousVote = localStorage.getItem(VOTED_KEY);
+    if (previousVote) {
+      votingSection.classList.add('hidden');
+      resultsSection.classList.remove('hidden');
+      try {
+        const summary = await fetchSummary();
+        renderResults(summary, previousVote);
+      } catch (err) {
+        console.error('Failed to load initial summary:', err);
+      }
+      return;
+    }
+
+    // 3. Attach radio change listeners
     radioInputs.forEach((radio) => {
       radio.addEventListener('change', handleRadioChange);
     });
 
-    // 3. Attach submit button listener
+    // 4. Attach submit button listener
     submitBtn.addEventListener('click', handleSubmitVote);
 
     // Initial button state
@@ -109,8 +125,11 @@
     statusMsg.className = 'status-msg';
 
     try {
-      // 1. Save Vote
+      // 1. Save Vote to Supabase (or fallback)
       await saveVote(selectedChoice, sourceParam);
+
+      // Save voted choice locally to persist display across reloads
+      localStorage.setItem(VOTED_KEY, selectedChoice);
 
       // 2. Fetch Latest Aggregation
       const summary = await fetchSummary();
@@ -149,12 +168,12 @@
     // Try Supabase insert
     if (SUPABASE_URL && SUPABASE_ANON_KEY) {
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
+        const res = await fetch(${SUPABASE_URL}/rest/v1/, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Authorization: Bearer ,
             Prefer: 'return=representation',
           },
           body: JSON.stringify(record),
@@ -164,21 +183,22 @@
           supabaseSaved = true;
           console.info('Successfully saved vote to Supabase:', record);
         } else {
-          console.warn(`Supabase returned status ${res.status}. Storing locally.`);
+          console.warn(Supabase returned status . Falling back to local storage.);
         }
       } catch (networkErr) {
         console.warn('Supabase fetch failed (network or CORS), using local storage fallback.', networkErr);
       }
     }
 
-    // Always mirror in LocalStorage for offline/fallback continuity
-    saveToLocalStorage(record);
+    if (!supabaseSaved) {
+      saveToLocalStorage(record);
+    }
 
     return { supabaseSaved, record };
   }
 
   /**
-   * Fetch aggregate data: attempts Supabase first, merges with/falls back to LocalStorage
+   * Fetch aggregate data: attempts Supabase first, falls back to LocalStorage
    */
   async function fetchSummary() {
     let votes = [];
@@ -187,18 +207,18 @@
     if (SUPABASE_URL && SUPABASE_ANON_KEY) {
       try {
         const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?select=choice&poll_id=eq.${encodeURIComponent(POLL_ID)}`,
+          ${SUPABASE_URL}/rest/v1/?select=choice&poll_id=eq.,
           {
             headers: {
               apikey: SUPABASE_ANON_KEY,
-              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+              Authorization: Bearer ,
             },
           }
         );
 
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             votes = data;
             fetchedFromSupabase = true;
           }
@@ -269,14 +289,14 @@
       fillEl.className = 'chart-bar-fill';
       // Trigger animation on next frame
       requestAnimationFrame(() => {
-        fillEl.style.width = `${item.percent}%`;
+        fillEl.style.width = ${item.percent}%;
       });
       trackEl.appendChild(fillEl);
 
       // 3. Percentage Text
       const pctEl = document.createElement('span');
       pctEl.className = 'chart-percent';
-      pctEl.textContent = `${item.percent}%`;
+      pctEl.textContent = ${item.percent}%;
 
       row.appendChild(nameEl);
       row.appendChild(trackEl);
@@ -286,7 +306,7 @@
     });
 
     // Update total count: "現在 48票"
-    totalVotesText.textContent = `現在 ${summary.total}票`;
+    totalVotesText.textContent = 現在 票;
   }
 
   /**
