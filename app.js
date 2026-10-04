@@ -7,15 +7,14 @@
   'use strict';
 
   // --- Configuration ---
-  // Supabase Project credentials and Poll ID
   const POLL_ID = 'sleeping-stars-v2-result';
   const SUPABASE_URL = 'https://telvacnnxhgathhugjlh.supabase.co';
   const SUPABASE_ANON_KEY = 'sb_publishable_puNMQNsWazm-HNUFuC5kVw_YDfaCKpo';
   const SUPABASE_TABLE = 'poll_votes';
 
   // Local Storage Keys
-  const LOCAL_STORAGE_KEY = m_poll_;
-  const VOTED_KEY = m_poll_voted_;
+  const LOCAL_STORAGE_KEY = `rm_poll_${POLL_ID}`;
+  const VOTED_KEY = `rm_poll_voted_${POLL_ID}`;
 
   // Types definition (Type 1 to Type 9)
   const TYPES = [
@@ -168,12 +167,12 @@
     // Try Supabase insert
     if (SUPABASE_URL && SUPABASE_ANON_KEY) {
       try {
-        const res = await fetch(${SUPABASE_URL}/rest/v1/, {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             apikey: SUPABASE_ANON_KEY,
-            Authorization: Bearer ,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
             Prefer: 'return=representation',
           },
           body: JSON.stringify(record),
@@ -183,7 +182,7 @@
           supabaseSaved = true;
           console.info('Successfully saved vote to Supabase:', record);
         } else {
-          console.warn(Supabase returned status . Falling back to local storage.);
+          console.warn(`Supabase returned status ${res.status}. Falling back to local storage.`);
         }
       } catch (networkErr) {
         console.warn('Supabase fetch failed (network or CORS), using local storage fallback.', networkErr);
@@ -207,11 +206,11 @@
     if (SUPABASE_URL && SUPABASE_ANON_KEY) {
       try {
         const res = await fetch(
-          ${SUPABASE_URL}/rest/v1/?select=choice&poll_id=eq.,
+          `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?select=choice&poll_id=eq.${encodeURIComponent(POLL_ID)}`,
           {
             headers: {
               apikey: SUPABASE_ANON_KEY,
-              Authorization: Bearer ,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
             },
           }
         );
@@ -289,14 +288,14 @@
       fillEl.className = 'chart-bar-fill';
       // Trigger animation on next frame
       requestAnimationFrame(() => {
-        fillEl.style.width = ${item.percent}%;
+        fillEl.style.width = `${item.percent}%`;
       });
       trackEl.appendChild(fillEl);
 
       // 3. Percentage Text
       const pctEl = document.createElement('span');
       pctEl.className = 'chart-percent';
-      pctEl.textContent = ${item.percent}%;
+      pctEl.textContent = `${item.percent}%`;
 
       row.appendChild(nameEl);
       row.appendChild(trackEl);
@@ -306,7 +305,7 @@
     });
 
     // Update total count: "現在 48票"
-    totalVotesText.textContent = 現在 票;
+    totalVotesText.textContent = `現在 ${summary.total}票`;
   }
 
   /**
