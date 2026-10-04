@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rainy Muse Poll</title>
+  <meta name="description" content="Sleeping Stars v2｜みんなの診断結果 匿名投票アンケート">
+
+  <!-- Typography: Cormorant Garamond, Noto Serif JP, Zen Kaku Gothic New -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+JP:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Subtle cosmic background ambience -->
+  <div class="sky-backdrop" aria-hidden="true">
+    <div class="star-dust"></div>
+    <div class="soft-glow"></div>
+  </div>
+
+  <div class="page-container">
+    <header class="poll-header">
+      <div class="brand-badge">Rainy Muse Poll</div>
+      <h1 class="page-title">Sleeping Stars v2｜みんなの診断結果</h1>
+    </header>
+
+    <main class="poll-card" id="pollCard">
+      <!-- Voting Form Section -->
+      <section class="voting-section" id="votingSection" aria-label="アンケート投票">
+        <div class="question-header">
+          <h2 class="question-title">あなたの結果を教えてください 🌙</h2>
+          <p class="question-subtitle">
+            Sleeping Stars v2で出たタイプを1つ選んでください。<br>
+            匿名で投票できます。
+          </p>
+        </div>
+
+        <form id="pollForm" class="poll-form" onsubmit="return false;">
+          <fieldset class="choices-fieldset">
+            <legend class="sr-only">診断結果のタイプを選択してください</legend>
+            <div class="choices-grid" id="choicesGrid">
+              <!-- Type 1 to Type 9 radio cards -->
+              <label class="choice-option" for="choice-type1">
+                <input type="radio" id="choice-type1" name="type_choice" value="type1">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 1</span>
+              </label>
+
+              <label class="choice-option" for="choice-type2">
+                <input type="radio" id="choice-type2" name="type_choice" value="type2">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 2</span>
+              </label>
+
+              <label class="choice-option" for="choice-type3">
+                <input type="radio" id="choice-type3" name="type_choice" value="type3">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 3</span>
+              </label>
+
+              <label class="choice-option" for="choice-type4">
+                <input type="radio" id="choice-type4" name="type_choice" value="type4">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 4</span>
+              </label>
+
+              <label class="choice-option" for="choice-type5">
+                <input type="radio" id="choice-type5" name="type_choice" value="type5">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 5</span>
+              </label>
+
+              <label class="choice-option" for="choice-type6">
+                <input type="radio" id="choice-type6" name="type_choice" value="type6">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 6</span>
+              </label>
+
+              <label class="choice-option" for="choice-type7">
+                <input type="radio" id="choice-type7" name="type_choice" value="type7">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 7</span>
+              </label>
+
+              <label class="choice-option" for="choice-type8">
+                <input type="radio" id="choice-type8" name="type_choice" value="type8">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 8</span>
+              </label>
+
+              <label class="choice-option" for="choice-type9">
+                <input type="radio" id="choice-type9" name="type_choice" value="type9">
+                <span class="choice-custom-radio" aria-hidden="true"></span>
+                <span class="choice-label">Type 9</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="submit-wrap">
+            <button type="button" id="submitBtn" class="submit-btn" disabled>
+              <span class="btn-text">投票して結果を見る</span>
+              <span class="btn-spinner" id="btnSpinner" aria-hidden="true"></span>
+            </button>
+            <p class="status-msg" id="statusMsg" aria-live="polite"></p>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results Section (displayed in-place upon vote) -->
+      <section class="results-section hidden" id="resultsSection" aria-label="投票結果">
+        <div class="results-header">
+          <h2 class="results-title">現在の投票結果 ✨</h2>
+          <p class="results-sub">ご参加ありがとうございます！</p>
+        </div>
+
+        <div class="results-chart" id="resultsChart" role="region" aria-label="各タイプの投票割合">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div class="total-votes-wrap">
+          <p class="total-votes" id="totalVotesText">現在 0票</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom CTA: Sleeping Stars v2 -->
+    <footer class="bottom-cta-section" aria-label="Sleeping Stars v2 診断案内">
+      <div class="bottom-cta-card">
+        <p class="cta-lead">まだ診断していない方へ 🌙</p>
+        <a href="https://rainymuse.com/sleeping-stars" class="cta-link-btn" id="ctaStarsLink" target="_blank" rel="noopener noreferrer">
+          Sleeping Stars v2を試してみる
+        </a>
+        <p class="cta-meta">8問・3〜5分・登録不要・結果無料</p>
+      </div>
+      <p class="copyright">&copy; Rainy Muse</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
