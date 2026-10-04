@@ -1,4 +1,4 @@
--- Rainy Muse Poll v0.1: Supabase Table Schema
+-- Rainy Muse Poll v0.1.1: Supabase Table Schema & Permissions
 -- Table: poll_votes
 
 create table if not exists public.poll_votes (
@@ -27,3 +27,8 @@ create policy "Allow anonymous select on poll_votes"
   on public.poll_votes
   for select
   using (true);
+
+-- Table & Sequence Grants for anon and authenticated roles
+grant usage on schema public to anon, authenticated;
+grant select, insert on public.poll_votes to anon, authenticated;
+grant usage, select on all sequences in schema public to anon, authenticated;
