@@ -1,6 +1,7 @@
 /**
  * Rainy Muse Poll v0.1.1 - Application Logic
  * Minimal anonymous single-vote poll for Sleeping Stars v2
+ * Supports multi-language via URL query (?lang=en / ?lang=ja)
  */
 
 (function () {
@@ -29,6 +30,46 @@
     { key: 'type9', label: 'Type 9' },
   ];
 
+  // --- i18n Dictionary ---
+  const I18N = {
+    ja: {
+      docTitle: 'Rainy Muse Poll',
+      titleMain: 'Sleeping Stars v2',
+      titleSep: '｜',
+      titleSub: 'みんなの診断結果',
+      questionTitle: 'あなたの結果を教えてください 🌙',
+      questionSubtitle: 'Sleeping Stars v2で出たタイプを1つ選んでください。<br>匿名で投票できます。',
+      legend: '診断結果のタイプを選択してください',
+      submitBtn: '投票して結果を見る',
+      savingText: '保存中...',
+      errorText: '保存中に問題が発生しました。もう一度お試しください。',
+      resultsTitle: '現在の投票結果 ✨',
+      resultsSub: 'ご参加ありがとうございます！',
+      totalVotes: (count) => `現在 ${count}票`,
+      ctaLead: 'まだ診断していない方へ 🌙',
+      ctaBtn: 'Sleeping Stars v2を試してみる',
+      ctaMeta: '8問・3〜5分・登録不要・結果無料',
+    },
+    en: {
+      docTitle: 'Sleeping Stars v2 | Community Results',
+      titleMain: 'Sleeping Stars v2',
+      titleSep: ' | ',
+      titleSub: 'Community Results',
+      questionTitle: 'Tell us your result 🌙',
+      questionSubtitle: 'Choose the type you received in Sleeping Stars v2.<br>Voting is anonymous.',
+      legend: 'Select the type you received in Sleeping Stars v2',
+      submitBtn: 'Vote and see the results',
+      savingText: 'Saving...',
+      errorText: 'An error occurred while saving. Please try again.',
+      resultsTitle: 'Current Results ✨',
+      resultsSub: 'Thank you for participating!',
+      totalVotes: (count) => `Current: ${count} ${count === 1 ? 'vote' : 'votes'}`,
+      ctaLead: "Haven't tried Sleeping Stars v2 yet? 🌙",
+      ctaBtn: 'Try Sleeping Stars v2',
+      ctaMeta: '8 questions · 3–5 min · No sign-up · Free results',
+    },
+  };
+
   // --- DOM Elements ---
   const votingSection = document.getElementById('votingSection');
   const resultsSection = document.getElementById('resultsSection');
@@ -42,13 +83,69 @@
   // --- State ---
   let selectedChoice = null;
   let sourceParam = 'direct';
+  let currentLang = 'ja';
+
+  /**
+   * Apply UI language strings
+   */
+  function applyLanguage(lang) {
+    const t = I18N[lang] || I18N.ja;
+    document.documentElement.lang = lang;
+    document.title = t.docTitle;
+
+    const titleMain = document.querySelector('.title-main');
+    if (titleMain) titleMain.textContent = t.titleMain;
+
+    const titleSep = document.querySelector('.title-sep');
+    if (titleSep) titleSep.textContent = t.titleSep;
+
+    const titleSub = document.querySelector('.title-sub');
+    if (titleSub) titleSub.textContent = t.titleSub;
+
+    const qTitle = document.querySelector('.question-title');
+    if (qTitle) qTitle.textContent = t.questionTitle;
+
+    const qSubtitle = document.querySelector('.question-subtitle');
+    if (qSubtitle) qSubtitle.innerHTML = t.questionSubtitle;
+
+    const legend = document.querySelector('.choices-fieldset legend');
+    if (legend) legend.textContent = t.legend;
+
+    const btnText = submitBtn.querySelector('.btn-text');
+    if (btnText) btnText.textContent = t.submitBtn;
+
+    const resTitle = document.querySelector('.results-title');
+    if (resTitle) resTitle.textContent = t.resultsTitle;
+
+    const resSub = document.querySelector('.results-sub');
+    if (resSub) resSub.textContent = t.resultsSub;
+
+    const ctaLead = document.querySelector('.cta-lead');
+    if (ctaLead) ctaLead.textContent = t.ctaLead;
+
+    const ctaLinkBtn = document.getElementById('ctaStarsLink');
+    if (ctaLinkBtn) ctaLinkBtn.textContent = t.ctaBtn;
+
+    const ctaMeta = document.querySelector('.cta-meta');
+    if (ctaMeta) ctaMeta.textContent = t.ctaMeta;
+  }
 
   /**
    * Initialize URL parameters, listeners, and existing state
    */
   async function init() {
-    // 1. Extract source from URL query parameter (e.g. ?source=note)
     const urlParams = new URLSearchParams(window.location.search);
+
+    // 1. Language detection (?lang=en -> en, otherwise ja)
+    const rawLang = urlParams.get('lang');
+    if (rawLang && rawLang.trim().toLowerCase() === 'en') {
+      currentLang = 'en';
+    } else {
+      currentLang = 'ja';
+    }
+    applyLanguage(currentLang);
+
+    // 2. Extract source from URL query parameter (e.g. ?source=note)
     const rawSource = urlParams.get('source');
     if (rawSource && rawSource.trim() !== '') {
       sourceParam = rawSource.trim();
@@ -56,7 +153,7 @@
       sourceParam = 'direct';
     }
 
-    // 2. Check if user already voted in this browser
+    // 3. Check if user already voted in this browser
     const previousVote = localStorage.getItem(VOTED_KEY);
     if (previousVote) {
       votingSection.classList.add('hidden');
@@ -70,12 +167,12 @@
       return;
     }
 
-    // 3. Attach radio change listeners
+    // 4. Attach radio change listeners
     radioInputs.forEach((radio) => {
       radio.addEventListener('change', handleRadioChange);
     });
 
-    // 4. Attach submit button listener
+    // 5. Attach submit button listener
     submitBtn.addEventListener('click', handleSubmitVote);
 
     // Initial button state
@@ -117,10 +214,12 @@
   async function handleSubmitVote() {
     if (!selectedChoice) return;
 
+    const t = I18N[currentLang] || I18N.ja;
+
     // Loading UI state
     submitBtn.disabled = true;
     submitBtn.classList.add('is-loading');
-    statusMsg.textContent = '保存中...';
+    statusMsg.textContent = t.savingText;
     statusMsg.className = 'status-msg';
 
     try {
@@ -144,7 +243,7 @@
       resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
       console.error('Vote submission error:', err);
-      statusMsg.textContent = '保存中に問題が発生しました。もう一度お試しください。';
+      statusMsg.textContent = t.errorText;
       statusMsg.className = 'status-msg is-error';
       submitBtn.disabled = false;
       submitBtn.classList.remove('is-loading');
@@ -304,8 +403,9 @@
       resultsChart.appendChild(row);
     });
 
-    // Update total count: "現在 48票"
-    totalVotesText.textContent = `現在 ${summary.total}票`;
+    // Update total count
+    const t = I18N[currentLang] || I18N.ja;
+    totalVotesText.textContent = t.totalVotes(summary.total);
   }
 
   /**
